@@ -19,28 +19,23 @@ def get_clinical_trials_data(condition, location, status, study_type, gender, ag
     all_studies = []
     params = {
         "format": "json",
-        "pageSize": 10
+        "pageSize": 10,
+        "query.cond": condition,
+        "query.term": age_group,  # Adjust based on correct API usage
+        "query.locn": location,
+        "filter.overallStatus": status,
+        "postFilter.overallStatus": status  # Ensure consistency in status filtering
     }
 
-    # Constructing query terms
-    query_terms = [condition, location]  # Directly adding condition and location to query terms if provided
-
-    # Combining query terms
-    if query_terms:
-        params["query.term"] = " AND ".join(filter(None, query_terms))  # Filter out any empty strings
-
-    # Adding status, study type, and gender filters if they are specified and not 'All'
-    if status and status != "All":
-        params["filter.overallStatus"] = status
-    if study_type and study_type != "All":
-        params["filter.studyType"] = study_type
-    if gender and gender != "All":
-        params["filter.gender"] = gender
-
-    # Adding age group filter using postFilter.advanced
     age_query = map_age_group_to_query(age_group)
     if age_query:
         params["postFilter.advanced"] = age_query
+    
+    # Adjusting study_type and gender parameters based on user input
+    if study_type != "All":
+        params["filter.studyType"] = study_type
+    if gender != "All":
+        params["filter.gender"] = gender
 
     page_token = None
     while len(all_studies) < max_studies:
