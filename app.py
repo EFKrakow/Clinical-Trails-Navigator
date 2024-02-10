@@ -1,3 +1,4 @@
+import json
 import streamlit as st
 from clinical_trials_app import fetch_studies, process_studies
 import pandas as pd
@@ -27,6 +28,14 @@ if st.button("Search Clinical Trials"):
     if results and 'studies' in results:
         df = process_studies(results)
         st.dataframe(df.head(page_size))
-        # Include download buttons for CSV/JSON as needed
+ 
+
+        
+        csv = df.to_csv(index=False).encode('utf-8')
+        st.download_button(label="Download data as CSV", data=csv, file_name='clinical_trials.csv', mime='text/csv')
+        
+       
+        json_data = json.dumps(results, indent=2)  
+        st.download_button(label="Download data as JSON", data=json_data, file_name='clinical_trials.json', mime='application/json')
     else:
         st.error("No results found or error fetching data.")
