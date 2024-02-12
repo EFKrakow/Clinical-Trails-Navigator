@@ -1,5 +1,5 @@
 import requests
-import streamlit as st  
+import streamlit as st
 MAPBOX_TOKEN = st.secrets["MAPBOX_TOKEN"]
 
 
