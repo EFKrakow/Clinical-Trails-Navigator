@@ -49,9 +49,17 @@ def process_studies(data):
                                f"Role: {primary_contact.get('role', 'N/A')}, " \
                                f"Phone: {primary_contact.get('phone', 'N/A')}, " \
                                f"Email: {primary_contact.get('email', 'N/A')}"
-        additional_locations_contacts = [f"Facility: {loc['facility']}, City: {loc.get('city', 'N/A')}, " \
-                                         f"State: {loc.get('state', 'N/A')}, Country: {loc.get('country', 'N/A')}" \
-                                         for loc in locations[1:]]
+        
+
+        additional_info = []
+        for loc in locations[1:]:  # Skip primary location
+            contacts_info = '; '.join([f"{c.get('name', 'N/A')} (Email: {c.get('email', 'N/A')})" for c in loc.get('contacts', [])])
+            loc_info = f"Facility: {loc.get('facility', 'N/A')}, City: {loc.get('city', 'N/A')}, " \
+                       f"State: {loc.get('state', 'N/A')}, Country: {loc.get('country', 'N/A')}, Contacts: {contacts_info}"
+            additional_info.append(loc_info)
+        
+        additional_info_str = " || ".join(additional_info)  # Concatenate all additional location info into a single string
+
         processed_data.append([
             identification.get('briefTitle', 'N/A'),
             phase,
@@ -59,7 +67,7 @@ def process_studies(data):
             link_to_study,
             primary_location,
             primary_contact_info,
-            " || ".join(additional_locations_contacts)
+            additional_info_str  # Use the concatenated string
         ])
     return pd.DataFrame(processed_data, columns=['Title', 'Phase', 'Eligibility Criteria', 'Link to Study', 'Primary Location', 'Primary Contact', 'Additional Locations and Contacts'])
 
