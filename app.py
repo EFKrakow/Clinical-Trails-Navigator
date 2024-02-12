@@ -1,13 +1,16 @@
-import json
 import streamlit as st
 from clinical_trials_app import fetch_studies, process_studies
+from mapbox_api import get_location_suggestions  
 import pandas as pd
+import json
 
-# Streamlit UI setup with predefined inputs
 st.title("Clinical Trials Search")
 condition = st.text_input("Condition/Disease", value="cancer")
 other_terms = st.text_input("Other Terms", value="treatment")
-location = st.text_input("Location", value="new york")
+user_input = st.text_input('Type a location (city, state)', value="new york")
+if user_input:
+    suggestions = get_location_suggestions(user_input)
+    selected_location = st.selectbox('Select a location:', suggestions)
 status = st.selectbox("Status", ["RECRUITING", "NOT_YET_RECRUITING", "COMPLETED"], index=0)
 age_group = st.selectbox("Age Group", ["Child (birth–17)", "Adult (18–64)", "Older Adult (65+)"], index=1)
 page_size = st.number_input("Results to display", min_value=10, max_value=100, value=10)
@@ -22,15 +25,11 @@ min_age, max_age = age_mapping[age_group]["min_age"], age_mapping[age_group]["ma
 
 if st.button("Search Clinical Trials"):
     # Fetch and process the clinical trials data
-    print("fetching data")
-    print(type(condition), type(other_terms), type(location), type(status), type(min_age), type(max_age), type(page_size))
-    results = fetch_studies(condition, other_terms, location, status, min_age, max_age, page_size)
+    results = fetch_studies(condition, other_terms, selected_location, status, min_age, max_age, page_size)
     if results and 'studies' in results:
         df = process_studies(results)
         st.dataframe(df.head(page_size))
- 
 
-        
         csv = df.to_csv(index=False).encode('utf-8')
         st.download_button(label="Download data as CSV", data=csv, file_name='clinical_trials.csv', mime='text/csv')
         

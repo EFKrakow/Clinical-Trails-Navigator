@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import json
 
+
 def fetch_studies(condition, term, location, status, min_age, max_age, page_size=10):
     base_url = "https://clinicaltrials.gov/api/v2/studies"
     
