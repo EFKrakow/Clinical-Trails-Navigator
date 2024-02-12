@@ -52,7 +52,7 @@ def process_studies(data):
         
 
         additional_info = []
-        for loc in locations[1:]:  # Skip primary location
+        for loc in locations[1:21]:  # Skip primary location
             contacts_info = '; '.join([f"{c.get('name', 'N/A')} (Email: {c.get('email', 'N/A')})" for c in loc.get('contacts', [])])
             loc_info = f"Facility: {loc.get('facility', 'N/A')}, City: {loc.get('city', 'N/A')}, " \
                        f"State: {loc.get('state', 'N/A')}, Country: {loc.get('country', 'N/A')}, Contacts: {contacts_info}"
@@ -71,3 +71,5 @@ def process_studies(data):
         ])
     return pd.DataFrame(processed_data, columns=['Title', 'Phase', 'Eligibility Criteria', 'Link to Study', 'Primary Location', 'Primary Contact', 'Additional Locations and Contacts'])
 
+def sanitize_text(text):
+    return text.replace('\n', ' ').replace('\r', ' ')

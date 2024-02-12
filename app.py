@@ -1,5 +1,5 @@
 import streamlit as st
-from clinical_trials_app import fetch_studies, process_studies
+from clinical_trials_app import fetch_studies, process_studies, sanitize_text
 from mapbox_api import get_location_suggestions  
 import pandas as pd
 import json
@@ -28,6 +28,8 @@ if st.button("Search Clinical Trials"):
     results = fetch_studies(condition, other_terms, selected_location, status, min_age, max_age, page_size)
     if results and 'studies' in results:
         df = process_studies(results)
+        df['Title'] = df['Title'].apply(sanitize_text)
+        df['Eligibility Criteria'] = df['Eligibility Criteria'].apply(sanitize_text)
         st.dataframe(df.head(page_size+1))
 
         csv = df.to_csv(index=False, encoding='utf-8-sig').encode('utf-8-sig')
