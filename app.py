@@ -28,9 +28,9 @@ if st.button("Search Clinical Trials"):
     results = fetch_studies(condition, other_terms, selected_location, status, min_age, max_age, page_size)
     if results and 'studies' in results:
         df = process_studies(results)
-        st.dataframe(df.head(page_size))
+        st.dataframe(df.head(page_size+1))
 
-        csv = df.to_csv(index=False).encode('utf-8')
+        csv = df.to_csv(index=False, encoding='utf-8-sig').encode('utf-8-sig')
         st.download_button(label="Download data as CSV", data=csv, file_name='clinical_trials.csv', mime='text/csv')
         
        
