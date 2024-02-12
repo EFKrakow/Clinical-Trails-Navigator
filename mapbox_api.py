@@ -1,5 +1,6 @@
 import requests
-MAPBOX_TOKEN = 'pk.eyJ1IjoicnNldGhpMyIsImEiOiJjbHNqY2djbzkyam4wMmxvMGttNW4yZWlpIn0.t7xkBggaGeaYEX6BqrNYRQ'
+import streamlit as st  
+MAPBOX_TOKEN = st.secrets["MAPBOX_TOKEN"]
 
 
 def get_location_suggestions(query):
