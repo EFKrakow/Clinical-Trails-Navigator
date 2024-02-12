@@ -53,9 +53,10 @@ def process_studies(data):
 
         additional_info = []
         for loc in locations[1:21]:  # Skip primary location
-            contacts_info = '; '.join([f"{c.get('name', 'N/A')} (Email: {c.get('email', 'N/A')})" for c in loc.get('contacts', [])])
+            contacts = loc.get('contacts', [])
+            contacts_info = '; '.join([f"{c.get('name', 'N/A')} (Email: {c.get('email', 'N/A')})" for c in contacts])
             loc_info = f"Facility: {loc.get('facility', 'N/A')}, City: {loc.get('city', 'N/A')}, " \
-                       f"State: {loc.get('state', 'N/A')}, Country: {loc.get('country', 'N/A')}, Contacts: {contacts_info}"
+                       f"State: {loc.get('state', 'N/A')}, Contacts: {contacts_info if contacts else 'N/A'}"
             additional_info.append(loc_info)
         
         additional_info_str = " || ".join(additional_info)  # Concatenate all additional location info into a single string
